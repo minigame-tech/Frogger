@@ -135,3 +135,98 @@ class MainMenu:
         for i in range(8):
             g2d.draw_image(SPRITE, (i * (C + 8) + 24, y),
                            _TURTLE_CLIP[0], _TURTLE_CLIP[1], (C, C))
+
+    def _disegna_bottone(self, label: str, cy: int, selezionato: bool) -> None:
+        cx = self._cw // 2
+        bx = cx - _BTN_W // 2
+        by = cy - _BTN_H // 2
+
+        alpha = 180 if selezionato else 120
+        g2d.set_color((0, 0, 0, alpha))
+        g2d.draw_rect((bx, by), (_BTN_W, _BTN_H))
+
+        border = (255, 255, 0) if selezionato else (80, 80, 80)
+        g2d.set_color(border)
+        g2d.draw_line((bx,          by         ), (bx + _BTN_W, by          ), 3)
+        g2d.draw_line((bx + _BTN_W, by         ), (bx + _BTN_W, by + _BTN_H ), 3)
+        g2d.draw_line((bx + _BTN_W, by + _BTN_H), (bx,          by + _BTN_H ), 3)
+        g2d.draw_line((bx,          by + _BTN_H), (bx,           by          ), 3)
+
+        icon_y = cy - C // 2
+        g2d.draw_image(SPRITE, (bx - C - 4,        icon_y),
+                       (_CIRCLE_BTN[0], _CIRCLE_BTN[1]), (C, C))
+        g2d.draw_image(SPRITE, (bx + _BTN_W + 4,   icon_y),
+                       (_CIRCLE_BTN[0], _CIRCLE_BTN[1]), (C, C))
+
+        text_color = (255, 220, 0) if selezionato else (180, 180, 180)
+        g2d.set_color(text_color)
+        g2d.draw_text(label, (cx, cy), 26)
+
+    def _disegna_cursore_rana(self) -> None:
+        cy     = _BTNS[self._voce_sel]
+        offset = 4 if (self._anim_tick // 8) % 2 == 0 else 0
+        rx     = self._cw // 2 - _BTN_W // 2 - C * 2 - 8
+        ry     = cy - C // 2 + offset
+        g2d.draw_image(SPRITE, (rx, ry), (_FROG_CLIP[0], _FROG_CLIP[1]), (C, C))
+
+    def _disegna_decorazioni_basse(self) -> None:
+        bottom_y = self._ch - C - 8
+        g2d.draw_image(SPRITE, (10, bottom_y),
+                       (_SNAKE_CLIP[0], _SNAKE_CLIP[1]),
+                       (_SNAKE_CLIP[2], _SNAKE_CLIP[3]))
+        croc_x = self._cw - _CROC_CLIP[2] - 10
+        g2d.draw_image(SPRITE, (croc_x, bottom_y),
+                (_SNAKE_CLIP[0], _SNAKE_CLIP[1]),
+                (_SNAKE_CLIP[2], _SNAKE_CLIP[3]))
+
+    def _disegna_schermata_istruzioni(self) -> None:
+        """Overlay semitrasparente con le istruzioni di gioco."""
+        #Sfondo scuro
+        g2d.set_color((0, 0, 0, 210))
+        g2d.draw_rect((0, 0), (self._cw, self._ch))
+
+                # Riquadro centrale
+        box_w, box_h = 480, 320
+        box_x = self._cw // 2 - box_w // 2
+        box_y = self._ch // 2 - box_h // 2
+        g2d.set_color((20, 20, 60, 240))
+        g2d.draw_rect((box_x, box_y), (box_w, box_h))
+
+        # Bordo dorato
+        g2d.set_color((255, 220, 0))
+        g2d.draw_line((box_x,           box_y          ), (box_x + box_w, box_y          ), 3)
+        g2d.draw_line((box_x + box_w,   box_y          ), (box_x + box_w, box_y + box_h  ), 3)
+        g2d.draw_line((box_x + box_w,   box_y + box_h  ), (box_x,         box_y + box_h  ), 3)
+        g2d.draw_line((box_x,           box_y + box_h  ), (box_x,         box_y          ), 3)
+
+        cx = self._cw // 2
+
+        # Titolo
+        g2d.set_color((255, 220, 0))
+        g2d.draw_text("COME SI GIOCA", (cx, box_y + 30), 28)
+
+        # Istruzioni
+        g2d.set_color((255, 255, 255))
+        righe = [
+            ("↑  Su",            "Muovi la rana verso l'alto"),
+            ("↓  Giù",           "Muovi la rana verso il basso"),
+            ("←  Sinistra",      "Muovi la rana a sinistra"),
+            ("→  Destra",        "Muovi la rana a destra"),
+        ]
+        y0 = box_y + 80
+        for i, (tasto, desc) in enumerate(righe):
+            y = y0 + i * 40
+            g2d.set_color((0, 255, 200))
+            g2d.draw_text(tasto, (box_x + 130, y), 20)
+            g2d.set_color((220, 220, 220))
+            g2d.draw_text(desc,  (box_x + 330, y), 20)
+
+        # Obiettivo
+        g2d.set_color((255, 180, 0))
+        g2d.draw_text("Obiettivo: raggiungi la riva 5 volte per vincere!",
+                      (cx, box_y + 250), 17)
+
+        # Avviso per chiudere
+        g2d.set_color((160, 160, 160))
+        g2d.draw_text("Premi INVIO, ESC o clicca per tornare al menu",
+                      (cx, box_y + 290), 16)
