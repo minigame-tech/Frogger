@@ -2,7 +2,7 @@ import lib.g2d as g2d
 import pygame
 from pathlib import Path
 from src.Giocatore  import Giocatore, CELL
-from src.Main_Menu  import MainMenu
+from Menu.Main_Menu  import MainMenu
 
 # ===========================================================================
 # COSTANTI

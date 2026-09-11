@@ -1,0 +1,18 @@
+Migliorie da apportare al gioco:
+    Animazioni:
+        1) Introdurre animazione iniziale quando si avvia il gioco al doppio click;
+        2) Animazione di quando il giocatore preme il pulsante per giocare e di quando preme il pulsante per capire come giocare;
+        3) Animazione di spiegazione effettiva del gioco quando viene premuto il pulsante di inizio gioco da skippare dalla seconda volta in poi e NON inserirla
+        quando il giocatore riavvia il gioco quando perde
+    
+    Salvataggio dati:
+        Strutturare un database per l'utente per la registrazione dei seguenti dati:
+            1) Nome utente usato nel gioco;
+            2) Numero di partite;
+            3) Miglior punteggio e punteggio piu alto nelle partite effettuate nel determinato giorno di gioco da parte dell'utente
+        
+        Quando il giocatore avvia tramite il doppio click il gioco, 
+        si devono caricare tutti i vari dati del giocatore tramite una schermata di accesso stile Netflix e controllare le seguenti condizioni:
+            1) Se il giocatore esiste, vengono caricati i dati del giocatore;
+            2) Se il giocatore non esiste, viene riportato indietro per far creare all'utente un account per giocare e salvarlo nel database
+        Tutto questo tramite i file menu_accesso.py e grafica_accesso.py
