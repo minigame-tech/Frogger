@@ -1,36 +1,36 @@
 # 🐸 Frogger - Python Remake
 
-Un remake del classico videogioco **Frogger** sviluppato in **Python**, utilizzando la libreria **Pygame** per la gestione del comparto audio e il modulo **g2d** per la gestione della logica grafica e dei cicli di gioco.
+A remake of the classic arcade game **Frogger** developed in **Python**. It uses **Pygame** to power the audio engine and the **g2d** module to handle the graphical logic and core game loops.
 
-## 🚀 Funzionalità Principali
-- Logica di gioco fedele all'originale (movimento della rana, ostacoli, fiumi e strade).
-- Effetti sonori dinamici gestiti tramite Pygame.
-- Rendering grafico leggero e strutturato tramite g2d.
+## 🚀 Key Features
+- Gameplay mechanics faithful to the original arcade version (frog movement, obstacles, rivers, and roads).
+- Dynamic sound effects managed via Pygame.
+- Lightweight and structured graphical rendering using g2d.
 
-## 🛠️ Installazione e Avvio
-Per giocare al titolo in locale, assicurati di avere Python installato sul tuo computer, dopodiché:
+## 🛠️ Installation & Getting Started
+To play the game locally, ensure you have Python installed on your computer, then follow these steps:
 
-1. Clona il repository o scarica i file del progetto.
-2. Installa la dipendenza audio (Pygame):
+1. Clone the repository or download the project files.
+2. Install the required audio dependency (Pygame):
    ```bash
    pip install pygame
    ```
-3. Avvia il gioco eseguendo il file principale:
+3. Run the game by executing the main script:
    ```bash
    python main.py
    ```
 
 ## 📈 Roadmap
 
-### 🎨 Comparto Animazioni
-- [ ] **Splash Screen:** Introduzione animata automatica all'avvio del gioco tramite doppio click.
-- [ ] **Transizioni Menu:** Animazioni fluide alla pressione dei tasti nei menu principali.
-- [ ] **Tutorial Intelligente:** Schermata con spiegazione dei comandi visibile solo alla prima partita in assoluto (saltabile) e disattivata nei riavvii rapidi post-morte.
+### 🎨 Animations & Visual Feedback
+- [ ] **Splash Screen:** Automatic animated introduction upon launching the game with a double-click.
+- [ ] **Menu Transitions:** Smooth animations triggered when navigating and pressing buttons in the main menus.
+- [ ] **Smart Tutorial:** An input guide screen visible only during the player's very first game (skippable), which is automatically bypassed during quick post-death restarts.
 
-### 💾 Salvataggio Dati (Database)
-- [ ] **Accesso stile Netflix:** Interfaccia grafica all'avvio (`menu_accesso.py` e `grafica_accesso.py`) per caricare il proprio profilo o crearne uno nuovo se non esiste.
-- [ ] **Persistenza:** Tracciamento automatico del nome utente e del numero di partite giocate nel database locale (SQLite).
-- [ ] **Statistiche e Record:** Salvataggio permanente del miglior punteggio assoluto e del record giornaliero dinamico.
+### 💾 Data Persistence (Database)
+- [ ] **Netflix-style Login Screen:** A graphical startup interface (`menu_accesso.py` and `grafica_accesso.py`) to select an existing profile or create a new one.
+- [ ] **Persistence:** Automated tracking of usernames and total matches played stored within a local database (SQLite).
+- [ ] **Stats & Leaderboards:** Permanent tracking of the user's all-time high score alongside a dynamic daily high score system.
 
-## 📄 Licenza
-Questo progetto è rilasciato sotto i termini della licenza **MIT**. Consulta il file `LICENSE` per maggiori dettagli.
+## 📄 License
+This project is licensed under the terms of the **MIT License**. Check the `LICENSE` file for more details.
