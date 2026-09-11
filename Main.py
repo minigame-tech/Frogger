@@ -212,6 +212,17 @@ def _gestisci_zona_acqua() -> None:
     _sfx_squish.play()
     _giocatore.muori()
 
+def _gestisci_collisioni_strada() -> None:
+    fy = _giocatore.y + _giocatore.h //2
+    if not (ROAD_TOP_Y < fy < ROAD_BOTTOM_Y):
+        return
+    for v in _veicoli:
+        if _collide(_giocatore.rettangolo(), v.rettangolo()):
+            # Riproduce il suono dell'auto che schiaccia la rana
+            _sfx_splash.play()
+            _giocatore.muori()
+            return
+
 def _controlla_obiettivo() -> None:
     global _punteggio, _stato
     if _giocatore.y <= GOAL_Y:
@@ -220,3 +231,94 @@ def _controlla_obiettivo() -> None:
 
         if _punteggio >= 500:
             _stato = "vinci"
+
+def _controlla_game_over() -> None:
+    global _stato
+    if not _giocatore.vivo:
+        _stato = "game_over"
+
+def aggiorna_logica() -> None:
+    """Aggiorna tutto lo stato di gioco per un tick."""
+    #Per il salto salvo la vecchia posizione prima che gestisci_input agisca
+    pos_prec = (_giocatore.x, _giocatore.y)
+
+    _giocatore.gestisci_input(CANVAS_W, CANVAS_H)
+    _giocatore.aggiorna()
+
+    #Se le coordinate sono cambiate rispetto al frame precedente riproduco il salto
+    if (_giocatore.x, _giocatore.y) != pos_prec and _giocatore.vivo:
+        _sfx_jump.play()
+
+    _aggiorna_ostacoli()
+    _gestisci_zona_acqua()
+    _gestisci_collisioni_strada()
+    _controlla_obiettivo()
+    _controlla_game_over()
+
+# ===========================================================================
+# DISEGNO DI GIOCO
+# ===========================================================================
+def _disegna_sfondo() -> None:
+    g2d.draw_image(BACKGROUND, (0, 0))
+
+def _disegna_ostacoli() -> None:
+    for p in _piattaforme: p.disegna()
+    for v in _veicoli:     v.disegna()
+
+def _disegna_hud() -> None:
+    g2d.set_color((255, 255, 0))
+    g2d.draw_text(f"Punteggio: {_punteggio}", (120, 18), 20)
+    g2d.draw_text(f"Vite: {_giocatore.vite}", (520, 18), 20)
+
+def _disegna_schermata_finale(testo: str) -> None:
+    g2d.set_color((0, 0, 0, 160))
+    g2d.draw_rect((0, 0), (CANVAS_W, CANVAS_H))
+    g2d.set_color((255, 220, 0))
+    g2d.draw_text(testo, (CANVAS_W // 2, CANVAS_H // 2 - 20), 52)
+    g2d.set_color((255, 255, 255))
+    g2d.draw_text("R = Rigioca   •   M = Menu",
+                  (CANVAS_W // 2, CANVAS_H // 2 + 50), 20)
+
+def disegna_gioco() -> None:
+    """Ridisegno l'intero frame di gioco."""
+    g2d.clear_canvas()
+    _disegna_sfondo()
+    _disegna_ostacoli()
+    _giocatore.disegna()
+    _disegna_hud()
+
+    if _stato in ("game_over", "vinci"):
+        label = "GAME OVER" if _stato == "game_over" else "HAI VINTO!"
+        _disegna_schermata_finale(label)
+
+# ===========================================================================
+# TICK PRINCIPALE
+# ===========================================================================
+def tick() -> None:
+    global _stato
+
+    if _stato == "menu":
+        _menu.aggiorna()
+        _menu.disegna()
+
+        if _menu.avvia:
+            _avvia_partita()
+        elif _menu.esci:
+            g2d.close_canvas()
+
+    elif _stato == "gioco":
+        aggiorna_logica()
+        disegna_gioco()
+    else:
+        disegna_gioco()
+        if g2d.key_pressed("r") or g2d.key_pressed("R"):
+            _avvia_partita()
+        elif g2d.key_pressed("m") or g2d.key_pressed("M"):
+            _torna_al_menu()
+
+# ===========================================================================
+# ENTRY POINT
+# ===========================================================================
+if __name__ == "__main__":
+    inizializza()
+    g2d.main_loop(tick, fps=FPS)
