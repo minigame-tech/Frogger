@@ -1,36 +1,45 @@
-#Importo la libreria g2d
 import lib.g2d as g2d
 
-#Definisco le coordinate degli sprite sheet
-CELL = 32
+# ---------------------------------------------------------------------------
+# Coordinate sprite sheet  (frogger.png – griglia 32×32 px, 10 col × 9 righe)
+# ---------------------------------------------------------------------------
+CELL = 32          # dimensione di una cella nel foglio sprite
 
-#Definisco la direzione, dove ogni direzione ha 2 frame
+# Ogni direzione ha 2 frame: (col_frame0, col_frame1, riga)
 _FROG_FRAMES = {
     "up":    (0, 1, 0),
     "down":  (0, 1, 1),
     "left":  (0, 1, 2),
-    "right": (0, 1, 3)
+    "right": (0, 1, 3),
 }
 
-#Definisco le costanti di gioco
-STEP        = 40 #Pixel per ogni salto
-ANIM_STICKS = 6  #Frame in cui si mostra il frame di salto
+# ---------------------------------------------------------------------------
+# Costanti di gioco
+# ---------------------------------------------------------------------------
+STEP        = 40     # pixel per ogni salto
+ANIM_TICKS  = 6     # frame in cui si mostra il frame di salto
 
-#Classe che rappresenta la classe della rana controllata dal giocatore
+
 class Giocatore:
-    #Costruzione del personaggio
-    def __init__(self, _start_x: int, _start_y: int):
-        self._x = _start_x
-        self._y = _start_y
-        self._dir   = "up"  #Direzione corrente
-        self._frame = 0     #0 = fermo, 1 = in salto
-        self._anim  = 0     #Contatore tick animazione
+    """Rappresenta la rana controllata dal giocatore."""
+
+    # ------------------------------------------------------------------
+    # Costruzione
+    # ------------------------------------------------------------------
+    def __init__(self, start_x: int, start_y: int):
+        self._x = start_x
+        self._y = start_y
+        self._dir   = "up"      # direzione corrente
+        self._frame = 0         # 0 = fermo, 1 = in salto
+        self._anim  = 0         # contatore tick animazione
         self._vite  = 3
         self._vivo  = True
-        self._start_x = _start_x
-        self._start_y = _start_y
+        self._start_x = start_x
+        self._start_y = start_y
 
-    #Definisco le proprietà d'accesso
+    # ------------------------------------------------------------------
+    # Proprietà di accesso
+    # ------------------------------------------------------------------
     @property
     def x(self) -> int:
         return self._x
@@ -55,13 +64,14 @@ class Giocatore:
     def vivo(self) -> bool:
         return self._vivo
 
-    #Gestione dell'input leggendo i tasti premuti spostando la rana di un passo
+    # ------------------------------------------------------------------
+    # Input
+    # ------------------------------------------------------------------
     def gestisci_input(self, canvas_w: int, canvas_h: int) -> None:
-        #Controllo per non accettare input durante il salto
+        """Legge i tasti premuti e sposta la rana di un passo."""
         if self._anim > 0:
-            return
+            return  # durante il salto non si accetta input
 
-        #Controlli per indicare la direzione della rana
         moved = False
         if g2d.key_pressed("ArrowUp"):
             self._dir = "up"
@@ -80,53 +90,59 @@ class Giocatore:
             self._x   = min(canvas_w - CELL, self._x + STEP)
             moved = True
 
-        #Controllo se la rana e in movimento
         if moved:
             self._frame = 1
-            self._anim  = ANIM_STICKS
+            self._anim  = ANIM_TICKS
 
-    #Aggiornamento
-    #Avanzamento dell'animazione di salto
+    # ------------------------------------------------------------------
+    # Aggiornamento
+    # ------------------------------------------------------------------
     def aggiorna(self) -> None:
+        """Avanza l'animazione di salto."""
         if self._anim > 0:
             self._anim -= 1
             if self._anim == 0:
                 self._frame = 0
 
-    #Spostamento orizontale della rana usato da tronchi/tartarughe
     def trascinato(self, dx: int) -> None:
+        """Sposta orizzontalmente la rana (usato dai tronchi/tartarughe)."""
         self._x += dx
 
-    #Scala di una vita e riposizionamento della rana
     def muori(self) -> None:
+        """Scala una vita e riposiziona la rana."""
         self._vite -= 1
         if self._vite <= 0:
             self._vivo = False
         else:
             self.respawn()
 
-    #Riporto la rana alla posizione di partenza
     def respawn(self) -> None:
-        self._x     = self._start_x
-        self._y     = self._start_y
-        self._dir   = "up"
+        """Riporta la rana alla posizione di partenza."""
+        self._x    = self._start_x
+        self._y    = self._start_y
+        self._dir  = "up"
         self._frame = 0
         self._anim  = 0
 
-    #Rettangolo di collisione della rana
+    # ------------------------------------------------------------------
+    # Rettangolo di collisione (leggermente più piccolo dello sprite)
+    # ------------------------------------------------------------------
     def rettangolo(self) -> tuple[int, int, int, int]:
+        """Restituisce (x, y, w, h) del rettangolo di collisione."""
         margin = 4
         return (self._x + margin, self._y + margin,
-                CELL - margin * 2, CELL - margin *2)
+                CELL - margin * 2, CELL - margin * 2)
 
-    #Disegno la rana sullo schermo
+    # ------------------------------------------------------------------
+    # Disegno
+    # ------------------------------------------------------------------
     def disegna(self) -> None:
+        """Disegna la rana sullo schermo."""
         col0, col1, row = _FROG_FRAMES[self._dir]
         col = col1 if self._frame == 1 else col0
-        clip_x = col * CELL
-        clip_y = col * CELL
-
+        clip_x = col  * CELL
+        clip_y = row  * CELL
         g2d.draw_image("frogger.png",
                        (self._x, self._y),
-                       (clip_y, clip_y),
+                       (clip_x, clip_y),
                        (CELL, CELL))
