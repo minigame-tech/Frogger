@@ -1,0 +1,11 @@
+# File temporanei del sistema operativo
+.DS_Store
+Thumbs.db
+
+# Configurazione di VS Code
+.vscode/
+.idea/
+
+# Cache di Python (Rimozione dei file __pycache__ visibili nell'Explorer)
+__pycache__/
+*.pyc
