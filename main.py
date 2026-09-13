@@ -1,8 +1,8 @@
 import lib.g2d as g2d
 import pygame
 from pathlib import Path
-from src.Giocatore  import Giocatore, CELL
-from Menu.Main_Menu  import MainMenu
+from src.Giocatore import Giocatore, CELL
+from src.Menu.Main_Menu import Main_Menu
 
 # ===========================================================================
 # COSTANTI
@@ -95,7 +95,7 @@ class Piattaforma:
 # STATO GLOBALE
 # ===========================================================================
 _stato:       str              = "menu"
-_menu:        MainMenu | None  = None
+_menu:        Main_Menu | None  = None
 _giocatore:   Giocatore | None = None
 _veicoli:     list             = []
 _piattaforme: list             = []
@@ -179,7 +179,7 @@ def inizializza() -> None:
     pygame.mixer.music.set_volume(0.6)
     pygame.mixer.music.play(-1)         # Riproduce in loop infinito
     
-    _menu = MainMenu(CANVAS_W, CANVAS_H)
+    _menu = Main_Menu(CANVAS_W, CANVAS_H)
 
 
 def _avvia_partita() -> None:

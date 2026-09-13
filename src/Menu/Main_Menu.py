@@ -27,7 +27,7 @@ _BTN2_CY = 394   # ESCI
 _BTNS = [_BTN0_CY, _BTN1_CY, _BTN2_CY]
 
 
-class MainMenu:
+class Main_Menu:
     def __init__(self, canvas_w: int, canvas_h: int):
         self._cw = canvas_w
         self._ch = canvas_h
